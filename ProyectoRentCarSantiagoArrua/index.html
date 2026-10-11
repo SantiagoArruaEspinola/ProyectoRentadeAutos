@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Alquileres SA</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <aside class="menu">
+        <div class="logo">
+            <h2>RentCarSA</h2>
+            <p>Gestor de alquileres</p>
+        </div>
+
+        <nav>
+            <button class="menu-btn activo" onclick="mostrarSeccion('vehiculos', this)">
+                Vehículos
+            </button>
+            <button class="menu-btn" onclick="mostrarSeccion('alquileres', this)">
+                Mis alquileres
+            </button>
+            <button class="menu-btn solo-admin" onclick="mostrarSeccion('devoluciones', this)">
+                Devoluciones
+            </button>
+            <button class="menu-btn solo-admin" onclick="mostrarSeccion('clientes', this)">
+                Clientes
+            </button>
+            <button class="menu-btn solo-admin" onclick="mostrarSeccion('usuarios', this)">
+                Usuarios
+            </button>
+            <button class="menu-btn solo-admin" onclick="mostrarSeccion('informes', this)">
+                Informes
+            </button>
+        </nav>
+
+        <button class="cerrar-sesion" onclick="cerrarSesion()">
+            Cerrar sesión
+        </button>
+    </aside>
+
+    <main class="contenido">
+
+        <!-- VEHICULOS -->
+        <section id="vehiculos" class="seccion" style="display:block;">
+            <div class="encabezado">
+                <div>
+                    <h1 id="tituloBienvenida">Vehículos</h1>
+                    <p id="descripcionBienvenida">Catálogo de vehículos disponibles para alquiler.</p>
+                </div>
+                <button class="btn-principal solo-admin" onclick="abrirFormularioVehiculo()">
+                    Agregar vehículo
+                </button>
+            </div>
+
+            <div class="filtros">
+                <div class="campo">
+                    <label>Buscar</label>
+                    <input
+                        type="text"
+                        id="txtBuscar"
+                        placeholder="Marca, modelo o color..."
+                        onkeyup="filtrarVehiculos()">
+                </div>
+
+                <div class="campo">
+                    <label>Tipo</label>
+                    <select id="filtroTipo" onchange="filtrarVehiculos()">
+                        <option value="">Todos</option>
+                        <option value="Auto">Auto</option>
+                        <option value="Moto">Moto</option>
+                        <option value="Bicicleta">Bicicleta</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Disponibilidad</label>
+                    <select id="filtroDisponibilidad" onchange="filtrarVehiculos()">
+                        <option value="">Todos</option>
+                        <option value="disponible">Disponible</option>
+                        <option value="alquilado">Alquilado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="catalogoVehiculos" class="catalogo"></div>
+        </section>
+
+        <!-- ALQUILERES -->
+        <section id="alquileres" class="seccion">
+            <div class="encabezado">
+                <div>
+                    <h1>Alquileres</h1>
+                    <p>El administrador ve todos los alquileres y el cliente solo sus propios alquileres.</p>
+                </div>
+                <button id="btnNuevoAlquiler" class="btn-principal solo-admin" onclick="abrirFormularioAlquilerManual()">
+                    Nuevo alquiler
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Vehículo</th>
+                        <th>Inicio</th>
+                        <th>Devolución</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaAlquileres"></tbody>
+            </table>
+        </section>
+
+        <!-- DEVOLUCIONES -->
+        <section id="devoluciones" class="seccion">
+            <div class="encabezado">
+                <div>
+                    <h1>Devoluciones</h1>
+                    <p>Vehículos actualmente alquilados. Desde aquí el administrador registra las devoluciones.</p>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID alquiler</th>
+                        <th>Cliente</th>
+                        <th>Vehículo</th>
+                        <th>Fecha límite</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaDevoluciones"></tbody>
+            </table>
+        </section>
+
+        <!-- CLIENTES -->
+        <section id="clientes" class="seccion">
+            <div class="encabezado">
+                <div>
+                    <h1>Clientes</h1>
+                    <p>Administración de clientes.</p>
+                </div>
+                <button class="btn-principal" onclick="abrirFormularioCliente()">
+                    Nuevo cliente
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Cédula</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Usuario</th>
+                        <th>Alquileres</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaClientes"></tbody>
+            </table>
+        </section>
+
+        <!-- USUARIOS -->
+        <section id="usuarios" class="seccion">
+            <div class="encabezado">
+                <div>
+                    <h1>Usuarios</h1>
+                    <p>Administradores que pueden ingresar al sistema.</p>
+                </div>
+                <button class="btn-principal" onclick="abrirFormularioUsuario()">
+                    Nuevo usuario
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuarios"></tbody>
+            </table>
+        </section>
+
+        <!-- INFORMES -->
+        <section id="informes" class="seccion">
+            <h1>Informes</h1>
+            <p>Consultas sobre los alquileres.</p>
+
+            <div class="informe">
+                <h2>Vehículos alquilados entre fechas</h2>
+
+                <label>Desde:</label>
+                <input type="date" id="fechaDesde">
+
+                <label>Hasta:</label>
+                <input type="date" id="fechaHasta">
+
+                <button class="btn-principal" onclick="generarInformeFechas()">
+                    Generar
+                </button>
+
+                <div id="resultadoInformeFechas" class="resultado"></div>
+            </div>
+
+            <div class="informe">
+                <h2>Clientes con alquileres vencidos</h2>
+
+                <button class="btn-principal" onclick="generarInformeVencidos()">
+                    Generar informe
+                </button>
+
+                <div id="resultadoInformeVencidos" class="resultado"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODELOS -->
+    <script src="js/modelos/Usuario.js"></script>
+    <script src="js/modelos/Cliente.js"></script>
+    <script src="js/modelos/Vehiculo.js"></script>
+    <script src="js/modelos/Alquiler.js"></script>
+
+    <!-- CONTROLADORES -->
+    <!-- Repositorios: acceso a localStorage -->
+    <script src="js/repositorios/UsuarioRepository.js"></script>
+    <script src="js/repositorios/ClienteRepository.js"></script>
+    <script src="js/repositorios/VehiculoRepository.js"></script>
+    <script src="js/repositorios/AlquilerRepository.js"></script>
+
+    <!-- Controladores y vistas -->
+    <script src="js/controladores/UsuarioController.js"></script>
+    <script src="js/controladores/ClienteController.js"></script>
+    <script src="js/controladores/VehiculoController.js"></script>
+    <script src="js/controladores/AlquilerController.js"></script>
+    <script src="js/vistas/AlquilerVista.js"></script>
+    <script src="js/controladores/DevolucionController.js"></script>
+    <script src="js/controladores/InformeController.js"></script>
+    <script src="js/controladores/SistemaController.js"></script>
+
+    <script>
+        iniciarSistema();
+    </script>
+</body>
+</html>
